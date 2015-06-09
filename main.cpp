@@ -18,7 +18,7 @@ int k = 2;				// k = number of centroids
 int centroidcount[10];
 int dataCount = 0;
 
-double calculateDistance(double x, double y, double x1, double y1);
+double calculateSquaredDistance(double x, double y, double x1, double y1);
 void assignCentroid(double x, double y, int point);
 void calculateNewCentroid();
 
@@ -82,27 +82,27 @@ int main()
 	cin >> x[0];
 }
 
-double calculateDistance(double x, double y, double x1, double y1)
+double calculateSquaredDistance(double x, double y, double x1, double y1)
 {
 	double part1 = (x - x1) * (x - x1);
 	double part2 = (y - y1) * (y - y1);
-	double answer = sqrt(part1+part2);
+	double answer = part1 + part2;// sqrt(part1 + part2);
 
 	return answer;
 }
 
 void assignCentroid(double x, double y, int point)
 {
-	double smallest = 999;
+	double smallest = std::numeric_limits<double>::max();
 	int chosenCentroid = 999;
 
 	for( int i=0; i<k; i++)
 	{
-		double distanceToCentroid = calculateDistance(x, y, centroidx[i], centroidy[i]);
+		double SquaredDistanceToCentroid = calculateSquaredDistance(x, y, centroidx[i], centroidy[i]);
 		
-		if( distanceToCentroid < smallest )
+		if (SquaredDistanceToCentroid < smallest)
 		{
-			smallest = distanceToCentroid;
+			smallest = SquaredDistanceToCentroid;
 			chosenCentroid = i;
 		}
 	}
@@ -136,10 +136,10 @@ void calculateNewCentroid()
 		centroidx[i] = xsum / count;
 		centroidy[i] = ysum / count;
 
-		double movement = calculateDistance(oldcentroidx[i], oldcentroidy[i], centroidx[i], centroidy[i]);
+		double squaredMovement = calculateSquaredDistance(oldcentroidx[i], oldcentroidy[i], centroidx[i], centroidy[i]);
 
 		cout << "Centroid " << i << ": [" << centroidx[i] << ", " << centroidy[i] << "]" << endl;
 		outfile << "Centroid " << i << ": [" << centroidx[i] << ", " << centroidy[i] << "]" << endl;
-		cout << "Centroid moved " << movement << endl;
+		cout << "Centroid moved (in squared distance) " << squaredMovement << endl;
 	}
 }
